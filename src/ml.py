@@ -4,7 +4,7 @@ import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.model_selection import train_test_split, cross_val_score, StratifiedKFold, KFold
 from sklearn.dummy import DummyClassifier, DummyRegressor
 from sklearn.linear_model import LogisticRegression, Ridge
@@ -42,7 +42,7 @@ def train(df, target, task):
         raise ValueError('A text or ID column has over 100 categories. Remove it before training.')
     transforms = []
     if numeric:
-        transforms.append(('numeric', SimpleImputer(strategy='median', add_indicator=True), numeric))
+        transforms.append(('numeric', Pipeline([('impute', SimpleImputer(strategy='median', add_indicator=True)), ('scale', StandardScaler())]), numeric))
     if categorical:
         transforms.append(('category', Pipeline([('impute', SimpleImputer(strategy='most_frequent')), ('encode', OneHotEncoder(handle_unknown='ignore'))]), categorical))
     preprocess = ColumnTransformer(transforms)
