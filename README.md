@@ -16,6 +16,8 @@ The CSV files are in `data/` and can be downloaded from the app. Diabetes featur
 
 **No paid APIs, credits, or keys required.** Built with Python, pandas, scikit-learn, and Streamlit.
 
+**Portfolio case study:** [Wine classification — question, method, metrics, and limitations](CASE_STUDY.md).
+
 ## Run locally
 
 ```bash
