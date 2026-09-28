@@ -1,7 +1,6 @@
-import io
+from pathlib import Path
 import pandas as pd
 import streamlit as st
-from sklearn.metrics import ConfusionMatrixDisplay
 from src.ml import train, importance, predict_csv
 
 st.set_page_config(page_title='DataMind AI', page_icon='🧠', layout='wide')
@@ -9,18 +8,21 @@ st.title('🧠 DataMind AI')
 st.caption('Explore data, compare real ML models, explain predictions. No paid API required.')
 st.sidebar.header('Dataset')
 upload = st.sidebar.file_uploader('Upload a CSV (up to 10 MB)', type='csv')
+samples = {
+    'Wine varieties · classification': ('wine.csv', 'classification', 'https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_wine.html'),
+    'Iris flowers · classification': ('iris.csv', 'classification', 'https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_iris.html'),
+    'Diabetes progression · regression': ('diabetes.csv', 'regression', 'https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_diabetes.html'),
+}
 if upload is None:
-    st.info('Upload a CSV or try the included sample dataset.')
-    if st.button('Load sample: iris flowers'):
-        st.session_state['sample'] = True
-    if not st.session_state.get('sample'):
-        st.stop()
-    from sklearn.datasets import load_iris
-    bunch = load_iris(as_frame=True)
-    df = bunch.frame.rename(columns={'target': 'species'})
-    df['species'] = df['species'].map(dict(enumerate(bunch.target_names)))
+    selection = st.sidebar.selectbox('Included dataset', list(samples))
+    filename, suggested_task, source_url = samples[selection]
+    df = pd.read_csv(Path(__file__).parent / 'data' / filename)
+    signature_data = filename.encode()
+    st.info(f'Exploring {selection}. [Dataset source]({source_url})')
+    st.download_button('Download this sample CSV', df.to_csv(index=False).encode(), filename, 'text/csv')
 else:
-    st.session_state['sample'] = False
+    suggested_task = 'classification'
+    signature_data = upload.getvalue()
     if upload.size > 10_000_000:
         st.error('CSV exceeds the 10 MB limit.')
         st.stop()
@@ -35,7 +37,7 @@ if df.empty or len(df.columns) < 2:
     st.stop()
 st.sidebar.write(f'{len(df):,} rows · {len(df.columns)} columns')
 target = st.sidebar.selectbox('Target column', df.columns, index=len(df.columns)-1)
-task = st.sidebar.radio('Problem type', ['classification', 'regression'])
+task = st.sidebar.radio('Problem type', ['classification', 'regression'], index=['classification', 'regression'].index(suggested_task), key=f'task_{upload.name if upload else filename}')
 overview, modeling, forecasting = st.tabs(['Explore', 'Train & evaluate', 'Predict'])
 with overview:
     a, b, c = st.columns(3)
@@ -53,11 +55,11 @@ with modeling:
         try:
             with st.spinner('Training and evaluating…'):
                 st.session_state['result'] = train(df, target, task)
-                st.session_state['signature'] = (upload.getvalue() if upload else b'sample', target, task)
+                st.session_state['signature'] = (signature_data, target, task)
         except Exception as exc:
             st.error(str(exc))
     result = st.session_state.get('result')
-    signature = (upload.getvalue() if upload else b'sample', target, task)
+    signature = (signature_data, target, task)
     if result and st.session_state.get('signature') == signature:
         st.success(f"Best cross validation score: {result['winner']}")
         st.dataframe(result['scores'].style.format(precision=3), use_container_width=True)
