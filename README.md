@@ -2,7 +2,17 @@
 
 **[Live demo](https://datamind-ai-mpqbquetvscgmywhi72kapp.streamlit.app/)** · [Source code](https://github.com/syrymmombaj-stack/datamind-ai)
 
-An interactive, end-to-end tabular machine learning demo. Upload a CSV or explore the built-in iris sample, inspect missing values, choose a target, compare a baseline with linear and random-forest models, inspect permutation feature importance, and download predictions for new rows.
+An interactive, end-to-end tabular machine learning demo. Upload a CSV or explore three bundled datasets, inspect missing values, choose a target, compare a baseline with linear and random-forest models, inspect permutation feature importance, and download predictions for new rows.
+
+## Included datasets
+
+| Dataset | Task | Rows | Target | Source |
+| --- | --- | ---: | --- | --- |
+| Wine varieties | Classification | 178 | `wine_class` | [scikit-learn / UCI Wine](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_wine.html) |
+| Iris flowers | Classification | 150 | `species` | [scikit-learn Iris](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_iris.html) |
+| Diabetes progression | Regression | 442 | `disease_progression` | [scikit-learn Diabetes](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_diabetes.html) |
+
+The CSV files are in `data/` and can be downloaded from the app. Diabetes features are rounded to six decimal places in the bundled CSV. These small teaching datasets demonstrate the workflow; diabetes predictions are for education, not medical use.
 
 **No paid APIs, credits, or keys required.** Built with Python, pandas, scikit-learn, and Streamlit.
 
