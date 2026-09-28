@@ -1,6 +1,6 @@
 # DataMind AI
 
-**[Live demo](https://datamind-ai-mpqbquetvscgmywhi72kapp.streamlit.app/)** · [Source code](https://github.com/syrymmombaj-stack/datamind-ai)
+**[Live Streamlit demo](https://datamind-ai-mpqbquetvscgmywhi72kapp.streamlit.app/)** · [Source code](https://github.com/syrymmombaj-stack/datamind-ai)
 
 An interactive, end-to-end tabular machine learning demo. Upload a CSV or explore three bundled datasets, inspect missing values, choose a target, compare a baseline with linear and random-forest models, inspect permutation feature importance, and download predictions for new rows.
 
@@ -17,6 +17,20 @@ The CSV files are in `data/` and can be downloaded from the app. Diabetes featur
 **No paid APIs, credits, or keys required.** Built with Python, pandas, scikit-learn, and Streamlit.
 
 **Portfolio case study:** [Wine classification — question, method, metrics, and limitations](CASE_STUDY.md).
+
+## Custom website
+
+The new independent website is in `web/` and runs with `server.py`. It uses the same `src/ml.py` pipeline and the same bundled datasets as the Streamlit demo. Python serves the responsive HTML/CSS/JavaScript interface and a same-origin JSON API for dataset inspection, training, and prediction. No external model API or API key is required.
+
+```bash
+pip install -r requirements-web.txt
+python server.py
+# open http://localhost:8000
+```
+
+`render.yaml` configures a free Render web service. Connect this public repository to Render as a Blueprint; the build command installs `requirements-web.txt` and the start command runs `python server.py`. The free instance sleeps when idle, so the first request after inactivity can take about a minute. A custom paid domain is optional; Render supplies a free `onrender.com` address.
+
+For this public demo, CSV files are limited to 10 MB, 3,000 rows, and 40 columns. Prediction files are limited to 1 MB and 1,000 rows. Trained models stay in memory for up to 30 minutes or until the service restarts; no persistent account or storage is provided. Do not upload private or sensitive datasets.
 
 ## Run locally
 
