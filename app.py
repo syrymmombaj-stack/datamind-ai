@@ -48,7 +48,7 @@ with overview:
     st.subheader('Numeric summary')
     st.dataframe(df.describe().T if not df.select_dtypes('number').empty else pd.DataFrame(), use_container_width=True)
 with modeling:
-    st.write('Same 75/25 stratified holdout for each classification model; fixed random seed 42. Preprocessing is fitted on training data only.')
+    st.write('Models are ranked by three-fold cross validation on the training data. A separate 25% test split is held out until final evaluation. Preprocessing is fitted within each fold.')
     if st.button('Train models', type='primary'):
         try:
             with st.spinner('Training and evaluating…'):
@@ -59,9 +59,9 @@ with modeling:
     result = st.session_state.get('result')
     signature = (upload.getvalue() if upload else b'sample', target, task)
     if result and st.session_state.get('signature') == signature:
-        st.success(f"Top holdout score: {result['winner']}")
+        st.success(f"Best cross validation score: {result['winner']}")
         st.dataframe(result['scores'].style.format(precision=3), use_container_width=True)
-        st.caption('Selected on the displayed holdout score. For publication quality evaluation, add cross validation and a separate untouched final test set.')
+        st.caption('CV is used to select the model. Test metrics are measured after selection on untouched rows. Small datasets may still have noisy estimates.')
         with st.expander('Feature importance (permutation)'):
             if st.button('Calculate importance'):
                 try:
