@@ -1,5 +1,7 @@
 # DataMind AI
 
+**[Live demo](https://datamind-ai-mpqbquetvscgmywhi72kapp.streamlit.app/)** · [Source code](https://github.com/syrymmombaj-stack/datamind-ai)
+
 An interactive, end-to-end tabular machine learning demo. Upload a CSV or explore the built-in iris sample, inspect missing values, choose a target, compare a baseline with linear and random-forest models, inspect permutation feature importance, and download predictions for new rows.
 
 **No paid APIs, credits, or keys required.** Built with Python, pandas, scikit-learn, and Streamlit.
